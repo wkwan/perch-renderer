@@ -115,7 +115,7 @@ impl Swapchain {
             .image_color_space(desc.format.color_space)
             .image_format(desc.format.format)
             .image_extent(surface_resolution)
-            .image_usage(vk::ImageUsageFlags::STORAGE)
+            .image_usage(vk::ImageUsageFlags::STORAGE | vk::ImageUsageFlags::COLOR_ATTACHMENT)
             .image_sharing_mode(vk::SharingMode::EXCLUSIVE)
             .pre_transform(pre_transform)
             .composite_alpha(vk::CompositeAlphaFlagsKHR::OPAQUE)
@@ -239,8 +239,6 @@ impl Swapchain {
 
         match present_index {
             Ok(present_index) => {
-                assert_eq!(present_index, self.next_semaphore);
-
                 self.next_semaphore = (self.next_semaphore + 1) % self.images.len();
                 Ok(SwapchainImage {
                     image: self.images[present_index].clone(),
